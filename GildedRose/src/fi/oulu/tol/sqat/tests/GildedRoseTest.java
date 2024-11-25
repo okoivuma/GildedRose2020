@@ -212,4 +212,79 @@ public class GildedRoseTest {
 		assertEquals("Quality should not be over 50", 50, items.get(0).getQuality());
 	}
 	
+	@SuppressWarnings("static-access")
+	@Test
+	public void testMain() {
+	    
+	    GildedRose inn = new GildedRose();
+	    
+	    inn.main(null); 
+
+	    // Access the items list through the instance
+	    List<Item> items = inn.getItems();
+	    assertNotNull("Items list should not be null", items);
+	    assertEquals("Items list should contain 6 items", 6, items.size());
+	}
+	
+	/*
+	 * 
+	 * Loop Tests
+	 */
+	
+	@Test
+	public void loopTestZeroIterations() {
+		
+		GildedRose inn = new GildedRose();
+	    inn.oneDay(); // No items in the inn
+	    
+	    List<Item> items = inn.getItems();
+	    assertEquals("Items list should be empty", 0, items.size());
+	}
+	
+	@Test
+	public void loopTestThreeIterations() {
+		
+	    GildedRose inn = new GildedRose();
+	    inn.setItem(new Item("Aged Brie", 2, 0));
+	    inn.setItem(new Item("+5 Dexterity Vest", 10, 20));
+	    inn.setItem(new Item("Sulfuras, Hand of Ragnaros", 0, 80));
+	    inn.oneDay(); 
+	    List<Item> items = inn.getItems();
+	    
+	    
+	    assertEquals("Aged Brie SellIn didn't decrease", 1, items.get(0).getSellIn());
+	    assertEquals("Aged Brie quality should increase", 1, items.get(0).getQuality());
+	    
+	    
+	    assertEquals("Dexterity Vest SellIn didn't decrease", 9, items.get(1).getSellIn());
+	    assertEquals("Dexterity Vest quality should decrease by 1", 19, items.get(1).getQuality());
+	    
+	    
+	    assertEquals("Sulfuras SellIn should be constant", 0, items.get(2).getSellIn());
+	    assertEquals("Sulfuras quality should be constant", 80, items.get(2).getQuality());
+	}
+	
+	@Test
+	public void loopTestHundredItems() {
+		
+	    GildedRose inn = new GildedRose();
+	    
+	    
+	    for (int i = 0; i < 100; i++) {
+	        inn.setItem(new Item("Item", 10, 20));
+	    }
+	    inn.oneDay();
+	    
+	    List<Item> items = inn.getItems();
+	    assertEquals("List should have 100 items", 100, items.size());
+	    
+	    
+	    for (Item item : items) {
+	        assertEquals("SellIn should decrease", 9, item.getSellIn());
+	        assertEquals("Quality should decrease", 19, item.getQuality());
+	    }
+	    
+	}
+
+	
 }

@@ -1,4 +1,4 @@
-package fi.oulu.tol.sqat;
+ package fi.oulu.tol.sqat;
 
 import java.util.ArrayList;
 import java.util.List;
