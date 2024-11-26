@@ -2,6 +2,8 @@ package fi.oulu.tol.sqat.tests;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import org.junit.Test;
@@ -109,14 +111,24 @@ public class GildedRoseTest {
 	public void testAgedBrieQualitylimit() {
 		
 		GildedRose inn = new GildedRose();
-		inn.setItem(new Item("Aged Brie", 10, 50));
-		inn.oneDay();
+		inn.setItem(new Item("Aged Brie", 10, 49));
+		
+		
+		inn.setItem(new Item("Aged Brie", 10, 50)); 
+	    inn.oneDay();
 		
 		List<Item> items = inn.getItems();
 		
 		assertEquals("SellIn didn't decrease", 9, items.get(0).getSellIn());
 		assertEquals("Aged Brie quality cannot be over 50", 50, items.get(0).getQuality());
+	
+		assertEquals("SellIn didn't decrease", 9, items.get(1).getSellIn());
+		assertEquals("Aged Brie quality cannot be over 50", 50, items.get(1).getQuality());
+	
+		
 	}
+	
+	
 	
 	/*
 	 * 
@@ -168,7 +180,7 @@ public class GildedRoseTest {
 	public void testBackstageQualityPlusTwo() {
 		
 		GildedRose inn = new GildedRose();
-		inn.setItem(new Item("Backstage passes to a TAFKAL80ETC concert", 8, 10));
+		inn.setItem(new Item("Backstage passes to a TAFKAL80ETC concert", 6, 10));
 		inn.oneDay();
 		
 		List<Item> items = inn.getItems();
@@ -180,7 +192,7 @@ public class GildedRoseTest {
 	public void testBackstageQualityPlusThree() {
 		
 		GildedRose inn = new GildedRose();
-		inn.setItem(new Item("Backstage passes to a TAFKAL80ETC concert", 4, 10));
+		inn.setItem(new Item("Backstage passes to a TAFKAL80ETC concert", 5, 10));
 		inn.oneDay();
 		
 		List<Item> items = inn.getItems();
@@ -197,6 +209,7 @@ public class GildedRoseTest {
 		
 		List<Item> items = inn.getItems();
 		
+		assertEquals("Sell in didn't decrease", -1, items.get(0).getSellIn());
 		assertEquals("Quality should ne 0", 0, items.get(0).getQuality());
 	}
 	
@@ -205,12 +218,16 @@ public class GildedRoseTest {
 		
 		GildedRose inn = new GildedRose();
 		inn.setItem(new Item("Backstage passes to a TAFKAL80ETC concert", 8, 49));
+		inn.setItem(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 50));
 		inn.oneDay();
 		
 		List<Item> items = inn.getItems();
 		
 		assertEquals("Quality should not be over 50", 50, items.get(0).getQuality());
+		assertEquals("Quality should remain at 50", 50, items.get(1).getQuality());
 	}
+	
+	
 	
 	@SuppressWarnings("static-access")
 	@Test
@@ -219,11 +236,20 @@ public class GildedRoseTest {
 	    GildedRose inn = new GildedRose();
 	    
 	    inn.main(null); 
-
+	    
 	    // Access the items list through the instance
 	    List<Item> items = inn.getItems();
 	    assertNotNull("Items list should not be null", items);
 	    assertEquals("Items list should contain 6 items", 6, items.size());
+	}
+	
+	@Test
+	public void testConsoleOutput() {
+		
+	    ByteArrayOutputStream outPut = new ByteArrayOutputStream();
+	    System.setOut(new PrintStream(outPut));
+	    GildedRose.main(new String[]{});
+	    assertTrue(outPut.toString().contains("OMGHAI!"));
 	}
 	
 	/*
@@ -283,6 +309,22 @@ public class GildedRoseTest {
 	        assertEquals("SellIn should decrease", 9, item.getSellIn());
 	        assertEquals("Quality should decrease", 19, item.getQuality());
 	    }
+	    
+	}
+	
+	@Test
+	public void testLargeNumberOfItems() {
+	    
+	    GildedRose inn = new GildedRose();
+	    int n = 10000;
+	    
+	    for (int i = 0; i < n; i++) {
+	        inn.setItem(new Item("Item", 10, 20));
+	    }
+	    inn.oneDay();
+	    List<Item> items = inn.getItems();
+	    
+	    assertEquals("List size should be n", n, items.size());
 	    
 	}
 
