@@ -246,10 +246,10 @@ public class GildedRoseTest {
 	@Test
 	public void testConsoleOutput() {
 		
-	    ByteArrayOutputStream outPut = new ByteArrayOutputStream();
-	    System.setOut(new PrintStream(outPut));
+	    ByteArrayOutputStream output = new ByteArrayOutputStream();
+	    System.setOut(new PrintStream(output));
 	    GildedRose.main(new String[]{});
-	    assertTrue(outPut.toString().contains("OMGHAI!"));
+	    assertTrue(output.toString().contains("OMGHAI!"));
 	}
 	
 	/*
